@@ -1,0 +1,21 @@
+name: Build RaKurd
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git ~/theos
+          echo "THEOS=~/theos" >> $GITHUB_ENV
+      - name: Build Tweak
+        run: |
+          make package FINALPACKAGE=1
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RaKurd-dylib
+          path: .theos/obj/debug/*.dylib
